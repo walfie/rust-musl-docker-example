@@ -1,0 +1,8 @@
+[package]
+authors = ["Walfie <walfington@gmail.com>"]
+name = "rust-musl-docker-example"
+version = "0.1.0"
+
+[dependencies]
+futures = "0.1.14"
+hyper = "0.11.1"
