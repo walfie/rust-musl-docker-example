@@ -6,3 +6,6 @@ version = "0.1.0"
 [dependencies]
 futures = "0.1.14"
 hyper = "0.11.1"
+hyper-tls = "0.1.2"
+tokio-core = "0.1.9"
+openssl-probe = "0.1.1"
