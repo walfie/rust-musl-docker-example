@@ -1,10 +1,14 @@
+# rust-musl-docker-example
+
 Example project showing how to create a minimal Docker image for a Rust
-application that requires SSL certificates. The Dockerfile uses a multi-stage
-build, where the first stage compiles the app using `rust-musl-builder`, and
-the second stage copies the build artifacts (and SSL certificates) from the
-first stage over to a `from SCRATCH` base image.
+application that requires SSL certificates.
 
 The application is a webserver that proxies requests to httpbin.org over HTTPS.
+
+The Dockerfile uses a multi-stage build, where the first stage compiles the app
+using [`rust-musl-builder`](https://github.com/emk/rust-musl-builder), and the
+second stage copies the build artifacts (and SSL certificates) from the first
+stage over to a `FROM scratch` base image.
 
 ```sh
 # Build and run
