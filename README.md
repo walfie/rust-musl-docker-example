@@ -13,13 +13,13 @@ stage over to a `FROM scratch` base image.
 ```sh
 # Build and run
 docker build -t rust-musl-docker-example .
-docker run -d --name example -p8080:8080 --rm rust-musl-docker-example
+docker run --init -d --name example -p8080:8080 --rm rust-musl-docker-example
 
 # Test output
 curl localhost:8080/anything
 
 # Clean up
-docker stop -t1 example
+docker stop example
 docker rmi rust-musl-docker-example
 ```
 
