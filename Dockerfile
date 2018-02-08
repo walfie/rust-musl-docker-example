@@ -1,20 +1,21 @@
-FROM ekidd/rust-musl-builder as builder
+FROM clux/muslrust:stable as builder
 
-USER rust
-COPY . /home/rust/src/
-RUN sudo apt-get update \
-  && sudo apt-get install -y ca-certificates \
-  && sudo update-ca-certificates \
-  && cd /home/rust/src \
+COPY . /workspace
+RUN set -x \
+  && apt-get update \
+  && apt-get install -y ca-certificates \
+  && update-ca-certificates \
+  && cd /workspace \
   && cargo build --release \
-  && sudo mv \
-    /home/rust/src/target/x86_64-unknown-linux-musl/release \
-    /output
+  && mv /workspace/target/*/release /out
 
 FROM scratch
-EXPOSE 8080
-COPY --from=builder /output/rust-musl-docker-example /
+COPY --from=builder /out/rust-musl-docker-example /
 COPY --from=builder /etc/ssl/certs /etc/ssl/certs
 
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt \
+    SSL_CERT_DIR=/etc/ssl/certs
+
 ENTRYPOINT ["/rust-musl-docker-example"]
+EXPOSE 8080
 

@@ -2,7 +2,6 @@ extern crate hyper;
 extern crate futures;
 extern crate hyper_tls;
 extern crate tokio_core;
-extern crate openssl_probe;
 
 use futures::Stream;
 use hyper::{Client, Uri};
@@ -12,8 +11,6 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use tokio_core::reactor::Core;
 
 fn main() {
-    openssl_probe::init_ssl_cert_env_vars();
-
     let mut core = Core::new().expect("failed to create Core");
     let handle = core.handle();
 
