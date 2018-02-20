@@ -4,7 +4,13 @@ name = "rust-musl-docker-example"
 version = "0.1.0"
 
 [dependencies]
-futures = "0.1.14"
-hyper = "0.11.1"
-hyper-tls = "0.1.2"
-tokio-core = "0.1.9"
+futures = "0.1"
+hyper-tls = "0.1"
+tokio-core = "0.1"
+hyper = "0.11.18"
+
+# Patches a bug related to chunked encoding being set on GET requests.
+# TODO: Remove this section and replace with hyper v0.11.19 when released
+[patch.crates-io.hyper]
+git = "https://github.com/hyperium/hyper"
+rev = "77adab4ebf0fadd9ccd014d24ff0bcec1bce1e8b"
