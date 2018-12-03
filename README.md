@@ -21,5 +21,6 @@ curl localhost:8080/anything
 # Clean up
 docker stop example
 docker rmi rust-musl-docker-example
+docker image prune --filter label=stage=intermediate
 ```
 

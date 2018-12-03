@@ -1,4 +1,5 @@
 FROM clux/muslrust:stable as builder
+LABEL stage=intermediate
 
 COPY . /workspace
 RUN set -x \
