@@ -6,8 +6,8 @@ on:
     branches: [master]
 
 jobs:
-  lint:
-    name: lint
+  rustfmt:
+    name: rustfmt
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -16,16 +16,30 @@ jobs:
       with:
         profile: minimal
         toolchain: stable
-        components: rustfmt, clippy
+        components: rustfmt
         override: true
     - name: Run rustfmt
       uses: actions-rs/cargo@v1
       with:
         command: fmt
         args: --all -- --check
+
+  clippy:
+    name: clippy
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install rust
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        components: clippy
+        override: true
     - name: Run clippy
       uses: actions-rs/clippy-check@v1
       with:
+        name: clippy output
         token: ${{ secrets.GITHUB_TOKEN }}
         args: --all-features
 
