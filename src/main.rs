@@ -1,24 +1,21 @@
-extern crate hyper;
-extern crate hyper_tls;
-
-use hyper::rt::Future;
-use hyper::service::service_fn;
+use hyper::server::conn::AddrStream;
+use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Client, Request, Server};
 use hyper_tls::HttpsConnector;
+use std::convert::Infallible;
+use std::net::SocketAddr;
 
-fn main() {
-    // Needs to be 0.0.0.0 and not 127.0.0.1, or it won't work with Docker
-    let bind_address = "0.0.0.0:8080".parse().unwrap();
+#[tokio::main]
+async fn main() {
+    let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
 
-    let connector = HttpsConnector::new(1).expect("failed to create HttpsConnector");
+    let base_client = Client::builder().build::<_, hyper::Body>(HttpsConnector::new());
 
-    let client = Client::builder().build(connector);
+    let make_svc = make_service_fn(|_socket: &AddrStream| {
+        let client = base_client.clone();
 
-    let server = Server::bind(&bind_address)
-        .serve(move || {
-            let cloned_client = client.clone();
-
-            service_fn(move |incoming: Request<Body>| {
+        async {
+            Ok::<_, Infallible>(service_fn(move |incoming: Request<Body>| {
                 let uri = format!("https://httpbin.org{}", incoming.uri().path())
                     .parse()
                     .expect("invalid URI");
@@ -28,13 +25,14 @@ fn main() {
                 parts.headers.remove(hyper::header::HOST);
                 let outgoing = Request::from_parts(parts, body);
 
-                println!("Sending: {:?}", outgoing);
+                client.request(outgoing)
+            }))
+        }
+    });
 
-                cloned_client.request(outgoing)
-            })
-        })
-        .map_err(|e| eprintln!("error: {}", e));
+    let server = Server::bind(&addr).serve(make_svc);
 
-    println!("Server listening on {}", bind_address);
-    hyper::rt::run(server);
+    if let Err(e) = server.await {
+        eprintln!("server error: {}", e);
+    }
 }
