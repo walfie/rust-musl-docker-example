@@ -1,4 +1,4 @@
-FROM clux/muslrust:stable as builder
+FROM clux/muslrust:1.39.0-stable as builder
 LABEL stage=intermediate
 
 COPY . /workspace
