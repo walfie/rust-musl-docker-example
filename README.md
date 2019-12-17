@@ -7,8 +7,8 @@ The application is a webserver that proxies requests to httpbin.org over HTTPS.
 
 The Dockerfile uses a multi-stage build, where the first stage compiles the app
 using [`muslrust`](https://github.com/clux/muslrust), and the second stage
-copies the build artifacts (and SSL certificates) from the first stage over to
-a `FROM scratch` base image.
+copies the build artifacts from the first stage over to a
+[distroless base image](https://github.com/GoogleContainerTools/distroless/blob/master/base/README.md).
 
 ```sh
 # Build and run
