@@ -7,7 +7,7 @@ RUN set -x \
   && cargo build --release \
   && mv /workspace/target/*/release /out
 
-FROM gcr.io/distroless/base
+FROM gcr.io/distroless/static
 COPY --from=builder /out/rust-musl-docker-example /
 USER nonroot
 
